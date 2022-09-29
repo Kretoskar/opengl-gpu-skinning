@@ -33,4 +33,10 @@ struct vec3
     static vec3 Reject(const vec3 &a, const vec3 &b);
     
     static vec3 Reflect(const vec3 &a, const vec3 &b);
+
+    static vec3 Cross(const vec3 &v1, const vec3 &v2);
+
+    static vec3 Lerp(const vec3 &v1, const vec3 &v2, float t);
+    static vec3 SLerp(const vec3 &v1, const vec3 &v2, float t);
+    static vec3 NLerp(const vec3 &v1, const vec3 &v2, float t);
 };

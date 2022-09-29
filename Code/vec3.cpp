@@ -29,6 +29,16 @@ vec3 operator*(const vec3& v1, const vec3& v2)
     return vec3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 }
 
+bool operator==(const vec3& v1, const vec3& v2)
+{
+    return vec3::LenSq(v1 - v2) < VEC3_EPSILON;
+}
+
+bool operator != (const vec3& v1, const vec3& v2)
+{
+    return !(v1 == v2);
+}
+
 float vec3::Dot(const vec3& v1, const vec3& v2)
 {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -98,4 +108,43 @@ vec3 vec3::Reflect(const vec3& a, const vec3& b)
     float scale = Dot(a,b) / magBSq;
     vec3 proj2 = b * (scale * 2);
     return a - proj2;
+}
+
+vec3 vec3::Cross(const vec3& v1, const vec3& v2)
+{
+    return vec3(
+        v1.y * v2.z - v1.z * v2.y,
+        v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x
+    );
+}
+
+vec3 vec3::Lerp(const vec3& v1, const vec3& v2, float t)
+{
+    return vec3(
+        v1.x + (v2.x - v1.x) * t,
+        v1.y + (v2.y - v1.y) * t,
+        v1.z + (v2.z - v1.z) * t
+    );
+}
+
+vec3 vec3::SLerp(const vec3& v1, const vec3& v2, float t)
+{
+    if(t < 0.01f) { return Lerp(v1,v2,t); }
+
+    vec3 from = Normalized(v1);
+    vec3 to = Normalized(v2);
+
+    float theta = Angle(from, to);
+    float sinTheta = sinf(theta);
+
+    float a = sinf((1.0f - t) * theta) / sinTheta;
+    float b = sinf(t * theta) / sinTheta;
+
+    return from * a + to * b;
+}
+
+vec3 vec3::NLerp(const vec3& v1, const vec3& v2, float t)
+{
+    return Normalized(Lerp(v1, v2, t));
 }
