@@ -133,12 +133,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Code\glad.c" />
+    <ClCompile Include="Code\vec3.cpp" />
     <ClCompile Include="Code\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h" />
     <ClInclude Include="Code\glad.h" />
     <ClInclude Include="Code\khrplatform.h" />
+    <ClInclude Include="Code\vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
