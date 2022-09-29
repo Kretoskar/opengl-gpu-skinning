@@ -4,22 +4,27 @@
 #define VEC3_EPSILON 0.000001f
 #define RAD_TO_DEG 57.2958f
 
-vec3 vec3::operator+(const vec3& v1, const vec3& v2)
+vec3 operator+(const vec3& v1, const vec3& v2)
 {
     return vec3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
 }
 
-vec3 vec3::operator-(const vec3& v1, const vec3& v2)
+vec3 operator-(const vec3& v1, const vec3& v2)
 {
     return vec3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 }
 
-vec3 vec3::operator*(const vec3& v, float f)
+vec3 operator*(const vec3& v, float f)
 {
     return vec3(v.x * f, v.y * f, v.z * f);
 }
 
-vec3 vec3::operator*(const vec3& v1, const vec3& v2)
+vec3 operator*(float f,const vec3& v)
+{
+    return vec3(v.x * f, v.y * f, v.z * f);
+}
+
+vec3 operator*(const vec3& v1, const vec3& v2)
 {
     return vec3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 }
@@ -37,12 +42,9 @@ float vec3::LenSq(const vec3& v)
 float vec3::Len(const vec3& v)
 {
     float lenSq = LenSq(v);
-
     if(lenSq < VEC3_EPSILON)
-    {
         return 0.0f;
-    }
-
+    
     return sqrtf(lenSq);
 }
 
@@ -50,22 +52,18 @@ void vec3::Normalize(vec3& v)
 {
     float lenSq = LenSq(v);
     if(lenSq < VEC3_EPSILON) { return; }
+    
     float invLen = 1.0f / sqrtf(lenSq);
-    v.x *= invLen;
-    v.y *= invLen;
-    v.z *= invLen;
+    v.x *= invLen; v.y *= invLen; v.z *= invLen;
 }
 
 vec3 vec3::Normalized(const vec3& v)
 {
     float lenSq = LenSq(v);
     if(lenSq < VEC3_EPSILON) { return v; }
+    
     float invLen = 1.0f / sqrtf(lenSq);
-    return vec3(
-        v.x * invLen,
-        v.y * invLen,
-        v.z * invLen
-    );
+    return vec3(v.x * invLen,v.y * invLen,v.z * invLen);
 }
 
 float vec3::Angle(const vec3& v1, const vec3& v2)
@@ -78,4 +76,26 @@ float vec3::AngleDeg(const vec3& v1, const vec3& v2)
     return Angle(v1, v2) * RAD_TO_DEG;
 }
 
+vec3 vec3::Project(const vec3& a, const vec3& b)
+{
+    float lenBSq = Len(b);
+    if(lenBSq < VEC3_EPSILON) {return vec3();}
 
+    float scale = Dot(a,b) / lenBSq;
+    return b * scale;
+}
+
+vec3 vec3::Reject(const vec3& a, const vec3& b)
+{
+    return a - Project(a,b);
+}
+
+vec3 vec3::Reflect(const vec3& a, const vec3& b)
+{
+    float magBSq = Len(b);
+    if(magBSq < VEC3_EPSILON) { return vec3(); }
+
+    float scale = Dot(a,b) / magBSq;
+    vec3 proj2 = b * (scale * 2);
+    return a - proj2;
+}
