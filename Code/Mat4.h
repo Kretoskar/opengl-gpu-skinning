@@ -78,4 +78,10 @@ struct Mat4
     static Vec3 TransformPoint(const Mat4& m, const Vec3& v, float &w);
     static void Transpose(Mat4&m);
     static Mat4 Transposed(const Mat4 &m);
+
+    static float Determinant(const Mat4& m);
+    static Mat4 Adjugate(const Mat4& m);
+
+    static Mat4 Inverse(const Mat4& m);
+    static void Invert(Mat4& m);
 };
