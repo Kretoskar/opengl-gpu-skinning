@@ -1,4 +1,6 @@
-﻿#include "TVec4.h"
+﻿#pragma once
+#include "TVec4.h"
+#include "Vec3.h"
 
 /**
  * 4x4, column-major matrix
@@ -70,4 +72,10 @@ struct Mat4
         yx(yx), yy(yy), yz(yz), yw(yw),
         zx(zx), zy(zy), zz(zz), zw(zw),
         tx(tx), ty(ty), tz(tz), tw(tw) {}
+
+    static Vec3 TransformVector(const Mat4& m, const Vec3& v);
+    static Vec3 TransformPoint(const Mat4& m, const Vec3& v);
+    static Vec3 TransformPoint(const Mat4& m, const Vec3& v, float &w);
+    static void Transpose(Mat4&m);
+    static Mat4 Transposed(const Mat4 &m);
 };
