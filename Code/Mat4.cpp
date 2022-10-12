@@ -198,3 +198,41 @@ void Mat4::Invert(Mat4& m) {
 
     m = Adjugate(m) * (1.0f / det);
 }
+
+Mat4 Mat4::Frustum(float left, float right, float bottom, float top, float near, float far)
+{
+    if (left == right || top == bottom || near == far)
+    {
+        std::cout << "Invalid frustum\n";
+        return Mat4();
+    }
+
+    return Mat4(
+        (2.0f * near) / (right - 1), 0, 0, 0,
+        0, (2.0f * near) / (top - bottom), 0, 0,
+        (right + 1) / (right - 1), (top + bottom) / (top - bottom), (-(far + near)) / (far - near), -1,
+        0, 0, (-2 * far * near) / (far - near), 0);
+}
+
+Mat4 Mat4::Perspective(float fov, float aspect, float near, float far)
+{
+    float yMax = near * tanf(fov * 3.14159265359f / 360.0f);
+    float xMax = yMax * aspect;
+
+    return Frustum(-xMax, xMax, -yMax, yMax, near, far);
+}
+
+Mat4 Mat4::Orthographic(float left, float right, float bottom, float top, float far, float near)
+{
+    if (left == right || top == bottom || near == far)
+    {
+        std::cout << "Invalid frustum\n";
+        return Mat4();
+    }
+
+    return Mat4(
+        2.0f / (right - 1), 0, 0, 0,
+        0, 2.0f / (top - bottom), 0, 0,
+        0, 0, -2.0f / (far - near), 0,
+        -((right + 1)/(right - 1)), -((top+bottom)/(top-bottom)), -((far+near) / (far - near)), 1); 
+}
