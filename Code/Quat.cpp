@@ -2,6 +2,8 @@
 #include "Mat4.h"
 #include <cmath>
 
+#define QUAT_EPSILON 0.000001f
+
 Quat Quat::AngleAxis(float angle, const Vec3& axis)
 {
     Vec3 norm = Vec3::Normalized(axis);
@@ -51,4 +53,49 @@ Vec3 Quat::GetAxis(const Quat& quat)
 float Quat::GetAngle(const Quat& quat)
 {
     return 2.0f * acosf(quat.w);
+}
+
+bool Quat::SameOrientation(const Quat& a, const Quat& b)
+{
+    return (fabsf(a.x - b.x) <= QUAT_EPSILON &&
+            fabsf(a.y - b.y) <= QUAT_EPSILON &&
+            fabsf(a.z - b.z) <= QUAT_EPSILON &&
+            fabsf(a.w - b.w) <= QUAT_EPSILON) ||
+            (fabsf(a.x + b.x) <= QUAT_EPSILON &&
+            fabsf(a.y + b.y) <= QUAT_EPSILON &&
+            fabsf(a.z + b.z) <= QUAT_EPSILON &&
+            fabsf(a.w + b.w) <= QUAT_EPSILON);
+}
+
+Quat operator+(const Quat& a, const Quat& b)
+{
+    return Quat(a.x+b.x, a.y+b.y, a.z+b.z, a.w+b.w);
+}
+
+Quat operator-(const Quat& a, const Quat& b)
+{
+    return Quat(a.x-b.x, a.y-b.y, a.z-b.z, a.w-b.w);
+}
+
+Quat operator*(const Quat& a, float b)
+{
+    return Quat(a.x * b, a.y * b, a.z * b, a.w * b);
+}
+
+Quat operator-(const Quat& q)
+{
+    return Quat(-q.x, -q.y, -q.z, -q.w);
+}
+
+bool operator==(const Quat& left, const Quat& right)
+{
+    return (fabsf(left.x - right.x) <= QUAT_EPSILON &&
+            fabsf(left.y - right.y) <= QUAT_EPSILON &&
+            fabsf(left.z - right.z) <= QUAT_EPSILON &&
+            fabsf(left.w - right.w) <= QUAT_EPSILON);
+}
+
+bool operator!=(const Quat& left, const Quat& right)
+{
+    return !(left == right);
 }

@@ -30,5 +30,15 @@ struct Quat
     Quat FromTo(const Vec3& from, const Vec3& to);
 
     Vec3 GetAxis (const Quat& quat);
-    float GetAngle (const Quat& quat); 
+    float GetAngle (const Quat& quat);
+
+    static bool SameOrientation(const Quat& a, const Quat& b);
 };
+
+Quat operator+(const Quat& a, const Quat& b);
+Quat operator-(const Quat& a, const Quat& b);
+Quat operator*(const Quat& a, float b);
+Quat operator-(const Quat& q);
+
+bool operator==(const Quat& left, const Quat& right);
+bool operator!=(const Quat& left, const Quat& right);
