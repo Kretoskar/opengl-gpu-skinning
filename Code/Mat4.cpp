@@ -1,4 +1,5 @@
 ﻿#include "Mat4.h"
+#include "Vec3.h"
 #include <corecrt_math.h>
 #include <iostream>
 
@@ -235,4 +236,32 @@ Mat4 Mat4::Orthographic(float left, float right, float bottom, float top, float 
         0, 2.0f / (top - bottom), 0, 0,
         0, 0, -2.0f / (far - near), 0,
         -((right + 1)/(right - 1)), -((top+bottom)/(top-bottom)), -((far+near) / (far - near)), 1); 
+}
+
+Mat4 Mat4::LookAt(const Vec3& position, const Vec3& target, const Vec3& up)
+{
+    // forward is negative z (wtf opengl)
+    Vec3 forward = Vec3::Normalized(target - position) * -1.0f;
+    Vec3 right = Vec3::Cross(up, forward);
+
+    // vec3 == already has epsilon comparison
+    if(right == Vec3(0,0,0))
+    {
+        return Mat4();
+    }
+
+    Vec3::Normalize(right);
+    Vec3 newUp = Vec3::Normalized(Vec3::Cross(forward, right));
+
+    Vec3 t = Vec3(
+        -Vec3::Dot(right, position),
+        -Vec3::Dot(up, position),
+        -Vec3::Dot(forward, position));
+
+    return Mat4(
+        right.x, newUp.x, forward.x, 0,
+        right.y, up.y,    forward.y, 0,
+        right.z, up.z,    forward.z, 0,
+        t.x,     t.y,     t.z,        1
+    );
 }

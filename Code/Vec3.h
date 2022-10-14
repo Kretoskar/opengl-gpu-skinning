@@ -40,3 +40,11 @@ struct Vec3
     static Vec3 SLerp(const Vec3 &v1, const Vec3 &v2, float t);
     static Vec3 NLerp(const Vec3 &v1, const Vec3 &v2, float t);
 };
+
+Vec3 operator+(const Vec3& v1, const Vec3& v2);
+Vec3 operator-(const Vec3& v1, const Vec3& v2);
+Vec3 operator*(const Vec3& v, float f);
+Vec3 operator*(float f,const Vec3& v);
+Vec3 operator*(const Vec3& v1, const Vec3& v2);
+bool operator==(const Vec3& v1, const Vec3& v2);
+bool operator != (const Vec3& v1, const Vec3& v2);
