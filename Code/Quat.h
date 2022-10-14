@@ -25,13 +25,11 @@ struct Quat
     Quat() : x(0), y(0), z(0), w(1) {}
     Quat(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-    Quat AngleAxis(float angle, const Vec3& axis);
-
-    Quat FromTo(const Vec3& from, const Vec3& to);
-
     Vec3 GetAxis (const Quat& quat);
     float GetAngle (const Quat& quat);
-
+    
+    static Quat AngleAxis(float angle, const Vec3& axis);
+    static Quat FromTo(const Vec3& from, const Vec3& to);
     static bool SameOrientation(const Quat& a, const Quat& b);
 };
 

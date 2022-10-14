@@ -87,9 +87,9 @@ struct Mat4
     static Mat4 Inverse(const Mat4& m);
     static void Invert(Mat4& m);
     
-    Mat4 Frustum (float left, float right, float bottom, float top, float near, float far);
-    Mat4 Perspective (float fov, float aspect, float near, float far);
-    Mat4 Orthographic (float left, float right, float bottom, float top, float near, float far);
+    static Mat4 Frustum (float left, float right, float bottom, float top, float near, float far);
+    static Mat4 Perspective (float fov, float aspect, float near, float far);
+    static Mat4 Orthographic (float left, float right, float bottom, float top, float near, float far);
 
-    Mat4 LookAt (const Vec3& position, const Vec3& Target, const Vec3& Up);
+    static Mat4 LookAt (const Vec3& position, const Vec3& Target, const Vec3& Up);
 };
