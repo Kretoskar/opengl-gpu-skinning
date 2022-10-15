@@ -217,7 +217,7 @@ Mat4 Mat4::Frustum(float left, float right, float bottom, float top, float near,
 
 Mat4 Mat4::Perspective(float fov, float aspect, float near, float far)
 {
-    float yMax = near * tanf(fov * 3.14159265359f / 360.0f);
+    float yMax = near * tan(fov * 3.14159265359f / 360.0f);
     float xMax = yMax * aspect;
 
     return Frustum(-xMax, xMax, -yMax, yMax, near, far);

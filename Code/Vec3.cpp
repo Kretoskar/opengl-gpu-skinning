@@ -55,7 +55,7 @@ float Vec3::Len() const
     if(lenSq < VEC3_EPSILON)
         return 0.0f;
     
-    return sqrtf(lenSq);
+    return sqrt(lenSq);
 }
 
 void Vec3::Normalize(Vec3& v)
@@ -63,7 +63,7 @@ void Vec3::Normalize(Vec3& v)
     float lenSq = v.LenSq();
     if(lenSq < VEC3_EPSILON) { return; }
     
-    float invLen = 1.0f / sqrtf(lenSq);
+    float invLen = 1.0f / sqrt(lenSq);
     v.x *= invLen; v.y *= invLen; v.z *= invLen;
 }
 
@@ -72,13 +72,13 @@ Vec3 Vec3::Normalized() const
     float lenSq = LenSq();
     if(lenSq < VEC3_EPSILON) { return {x,y,z}; }
     
-    float invLen = 1.0f / sqrtf(lenSq);
+    float invLen = 1.0f / sqrt(lenSq);
     return Vec3(x * invLen,y * invLen,z * invLen);
 }
 
 float Vec3::Angle(const Vec3& v1, const Vec3& v2)
 {
-    return acosf(Dot(v1, v2) / (v1.Len() * v2.Len()));
+    return acos(Dot(v1, v2) / (v1.Len() * v2.Len()));
 }
 
 float Vec3::AngleDeg(const Vec3& v1, const Vec3& v2)
@@ -136,10 +136,10 @@ Vec3 Vec3::SLerp(const Vec3& v1, const Vec3& v2, float t)
     Vec3 to = v2.Normalized();
 
     float theta = Angle(from, to);
-    float sinTheta = sinf(theta);
+    float sinTheta = sin(theta);
 
-    float a = sinf((1.0f - t) * theta) / sinTheta;
-    float b = sinf(t * theta) / sinTheta;
+    float a = sin((1.0f - t) * theta) / sinTheta;
+    float b = sin(t * theta) / sinTheta;
 
     return from * a + to * b;
 }

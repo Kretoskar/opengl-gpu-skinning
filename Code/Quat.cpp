@@ -26,10 +26,10 @@ Quat operator-(const Quat& q)
 
 bool operator==(const Quat& left, const Quat& right)
 {
-    return (fabsf(left.x - right.x) <= QUAT_EPSILON &&
-            fabsf(left.y - right.y) <= QUAT_EPSILON &&
-            fabsf(left.z - right.z) <= QUAT_EPSILON &&
-            fabsf(left.w - right.w) <= QUAT_EPSILON);
+    return (abs(left.x - right.x) <= QUAT_EPSILON &&
+            abs(left.y - right.y) <= QUAT_EPSILON &&
+            abs(left.z - right.z) <= QUAT_EPSILON &&
+            abs(left.w - right.w) <= QUAT_EPSILON);
 }
 
 bool operator!=(const Quat& left, const Quat& right)
@@ -62,11 +62,11 @@ Quat Quat::FromTo(const Vec3& from, const Vec3& to)
     if (fromN == (toN * -1.0f))
     {
         Vec3 ortho = Vec3(1,0,0);
-        if(fabsf(fromN.y) < fabsf(fromN.x))
+        if(abs(fromN.y) < abs(fromN.x))
         {
             ortho = Vec3(0,1,0);
         }
-        if(fabsf(fromN.z) < fabsf(fromN.y) && fabsf(fromN.z) < fabsf(fromN.x))
+        if(abs(fromN.z) < abs(fromN.y) && abs(fromN.z) < abs(fromN.x))
         {
             ortho = Vec3(0,0,1);
         }
@@ -89,16 +89,44 @@ float Quat::GetAngle(const Quat& quat)
     return 2.0f * acosf(quat.w);
 }
 
+Quat Quat::Normalized() const
+{
+    float lenSq = LenSq();
+    if(lenSq < QUAT_EPSILON)
+    {
+        return {x,y,z,w};
+    }
+
+    float invLen = 1/sqrt(lenSq);
+
+    return Quat(x * invLen, y * invLen, z * invLen, w * invLen);
+}
+
+void Quat::Normalize(Quat& q)
+{
+    float lenSq = q.LenSq();
+    if(lenSq < QUAT_EPSILON)
+    {
+        return;
+    }
+
+    float invLen = 1/sqrt(lenSq);
+    q.x *= invLen;
+    q.y *= invLen;
+    q.z *= invLen;
+    q.w *= invLen;
+}
+
 bool Quat::SameOrientation(const Quat& a, const Quat& b)
 {
-    return (fabsf(a.x - b.x) <= QUAT_EPSILON &&
-            fabsf(a.y - b.y) <= QUAT_EPSILON &&
-            fabsf(a.z - b.z) <= QUAT_EPSILON &&
-            fabsf(a.w - b.w) <= QUAT_EPSILON) ||
-            (fabsf(a.x + b.x) <= QUAT_EPSILON &&
-            fabsf(a.y + b.y) <= QUAT_EPSILON &&
-            fabsf(a.z + b.z) <= QUAT_EPSILON &&
-            fabsf(a.w + b.w) <= QUAT_EPSILON);
+    return (abs(a.x - b.x) <= QUAT_EPSILON &&
+            abs(a.y - b.y) <= QUAT_EPSILON &&
+            abs(a.z - b.z) <= QUAT_EPSILON &&
+            abs(a.w - b.w) <= QUAT_EPSILON) ||
+            (abs(a.x + b.x) <= QUAT_EPSILON &&
+            abs(a.y + b.y) <= QUAT_EPSILON &&
+            abs(a.z + b.z) <= QUAT_EPSILON &&
+            abs(a.w + b.w) <= QUAT_EPSILON);
 }
 
 float Quat::Dot(const Quat& a, const Quat& b)
@@ -119,5 +147,5 @@ float Quat::Len() const
         return 0.0f;
     }
 
-    return sqrtf(lenSq);
+    return sqrt(lenSq);
 }
