@@ -126,29 +126,29 @@ void Mat4::Transpose(Mat4& m)
     M4SWAP(m.tz, m.zw)
 }
 
-Mat4 Mat4::Transposed(const Mat4& m)
+Mat4 Mat4::Transposed() const
 {
     return Mat4(
-        m.xx, m.yx, m.zx, m.tx,
-        m.xy, m.yy, m.zy, m.ty,
-        m.xz, m.yz, m.zz, m.tz,
-        m.xw, m.yw, m.zw, m.tw
+        xx, yx, zx, tx,
+        xy, yy, zy, ty,
+        xz, yz, zz, tz,
+        xw, yw, zw, tw
     );
 }
 
 #define M4_3X3MINOR(c0, c1, c2, r0, r1, r2) \
-(m.v[c0 * 4 + r0] * (m.v[c1 * 4 + r1] * m.v[c2 * 4 + r2] - m.v[c1 * 4 + r2] * m.v[c2 * 4 + r1]) - \
-m.v[c1 * 4 + r0] * (m.v[c0 * 4 + r1] * m.v[c2 * 4 + r2] - m.v[c0 * 4 + r2] * m.v[c2 * 4 + r1]) + \
-m.v[c2 * 4 + r0] * (m.v[c0 * 4 + r1] * m.v[c1 * 4 + r2] - m.v[c0 * 4 + r2] * m.v[c1 * 4 + r1]))
+(v[c0 * 4 + r0] * (v[c1 * 4 + r1] * v[c2 * 4 + r2] - v[c1 * 4 + r2] * v[c2 * 4 + r1]) - \
+v[c1 * 4 + r0] * (v[c0 * 4 + r1] * v[c2 * 4 + r2] - v[c0 * 4 + r2] * v[c2 * 4 + r1]) + \
+v[c2 * 4 + r0] * (v[c0 * 4 + r1] * v[c1 * 4 + r2] - v[c0 * 4 + r2] * v[c1 * 4 + r1]))
 
-float Mat4::Determinant(const Mat4& m) {
-    return  m.v[0] * M4_3X3MINOR(1, 2, 3, 1, 2, 3)
-        - m.v[4] * M4_3X3MINOR(0, 2, 3, 1, 2, 3)
-        + m.v[8] * M4_3X3MINOR(0, 1, 3, 1, 2, 3)
-        - m.v[12] * M4_3X3MINOR(0, 1, 2, 1, 2, 3);
+float Mat4::Determinant() const {
+    return  v[0] * M4_3X3MINOR(1, 2, 3, 1, 2, 3)
+        - v[4] * M4_3X3MINOR(0, 2, 3, 1, 2, 3)
+        + v[8] * M4_3X3MINOR(0, 1, 3, 1, 2, 3)
+        - v[12] * M4_3X3MINOR(0, 1, 2, 1, 2, 3);
 }
 
-Mat4 Mat4::Adjugate(const Mat4& m) {
+Mat4 Mat4::Adjugate() const {
     // Cofactor(M[i, j]) = Minor(M[i, j]] * pow(-1, i + j)
     Mat4 cofactor;
 
@@ -172,24 +172,24 @@ Mat4 Mat4::Adjugate(const Mat4& m) {
     cofactor.v[14] = -M4_3X3MINOR(0, 1, 2, 0, 1, 3);
     cofactor.v[15] = M4_3X3MINOR(0, 1, 2, 0, 1, 2);
 
-    return Transposed(cofactor);
+    return cofactor.Transposed();
 }
 
-Mat4 Mat4::Inverse(const Mat4& m) {
-    float det = Determinant(m);
+Mat4 Mat4::Inverse() const {
+    float det = Determinant();
 
     if (det == 0.0f) { // Epsilon check would need to be REALLY small
         std::cout << "WARNING: Trying to invert a matrix with a zero determinant\n";
         return Mat4();
     }
     
-    Mat4 adj = Adjugate(m);
+    Mat4 adj = Adjugate();
 
     return adj * (1.0f / det);
 }
 
 void Mat4::Invert(Mat4& m) {
-    float det = Determinant(m);
+    float det = m.Determinant();
 
     if (det == 0.0f) {
         std::cout << "WARNING: Trying to invert a matrix with a zero determinant\n";
@@ -197,7 +197,7 @@ void Mat4::Invert(Mat4& m) {
         return;
     }
 
-    m = Adjugate(m) * (1.0f / det);
+    m = m.Adjugate() * (1.0f / det);
 }
 
 Mat4 Mat4::Frustum(float left, float right, float bottom, float top, float near, float far)
@@ -241,7 +241,7 @@ Mat4 Mat4::Orthographic(float left, float right, float bottom, float top, float 
 Mat4 Mat4::LookAt(const Vec3& position, const Vec3& target, const Vec3& up)
 {
     // forward is negative z (wtf opengl)
-    Vec3 forward = Vec3::Normalized(target - position) * -1.0f;
+    Vec3 forward = (target - position).Normalized() * -1.0f;
     Vec3 right = Vec3::Cross(up, forward);
 
     // vec3 == already has epsilon comparison
@@ -251,7 +251,7 @@ Mat4 Mat4::LookAt(const Vec3& position, const Vec3& target, const Vec3& up)
     }
 
     Vec3::Normalize(right);
-    Vec3 newUp = Vec3::Normalized(Vec3::Cross(forward, right));
+    Vec3 newUp = Vec3::Cross(forward, right).Normalized();
 
     Vec3 t = Vec3(
         -Vec3::Dot(right, position),

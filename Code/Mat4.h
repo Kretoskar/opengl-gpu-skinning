@@ -75,17 +75,19 @@ struct Mat4
         zx(zx), zy(zy), zz(zz), zw(zw),
         tx(tx), ty(ty), tz(tz), tw(tw) {}
 
+    Mat4 Transposed() const;
+    float Determinant() const;
+    Mat4 Adjugate() const;
+
+    Mat4 Inverse() const;
+    
+    static void Invert(Mat4& m);
+
+    static void Transpose(Mat4&m);
+    
     static Vec3 TransformVector(const Mat4& m, const Vec3& v);
     static Vec3 TransformPoint(const Mat4& m, const Vec3& v);
     static Vec3 TransformPoint(const Mat4& m, const Vec3& v, float &w);
-    static void Transpose(Mat4&m);
-    static Mat4 Transposed(const Mat4 &m);
-
-    static float Determinant(const Mat4& m);
-    static Mat4 Adjugate(const Mat4& m);
-
-    static Mat4 Inverse(const Mat4& m);
-    static void Invert(Mat4& m);
     
     static Mat4 Frustum (float left, float right, float bottom, float top, float near, float far);
     static Mat4 Perspective (float fov, float aspect, float near, float far);

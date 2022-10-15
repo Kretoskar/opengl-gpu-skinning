@@ -18,22 +18,21 @@ struct Vec3
     Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
     Vec3(float *fv) : x(fv[0]), y(fv[1]), z(fv[2]) {}
     
-    static float Dot(const Vec3 &v1, const Vec3 &v2);
+    float LenSq() const;
+    float Len() const;
     
-    static float LenSq(const Vec3& v);
-    static float Len(const Vec3 &v);
-    
+    Vec3 Normalized() const;
+
     static void Normalize (Vec3 &v);
-    static Vec3 Normalized(const Vec3 &v);
     
     static float Angle(const Vec3 &v1, const Vec3 &v2);
     static float AngleDeg(const Vec3 &v1, const Vec3 &v2);
     
     static Vec3 Project(const Vec3 &a, const Vec3 &b);
     static Vec3 Reject(const Vec3 &a, const Vec3 &b);
-    
     static Vec3 Reflect(const Vec3 &a, const Vec3 &b);
 
+    static float Dot(const Vec3 &v1, const Vec3 &v2);
     static Vec3 Cross(const Vec3 &v1, const Vec3 &v2);
 
     static Vec3 Lerp(const Vec3 &v1, const Vec3 &v2, float t);

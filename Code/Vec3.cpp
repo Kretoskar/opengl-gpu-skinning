@@ -31,7 +31,7 @@ Vec3 operator*(const Vec3& v1, const Vec3& v2)
 
 bool operator==(const Vec3& v1, const Vec3& v2)
 {
-    return Vec3::LenSq(v1 - v2) < VEC3_EPSILON;
+    return (v1 - v2).LenSq() < VEC3_EPSILON;
 }
 
 bool operator != (const Vec3& v1, const Vec3& v2)
@@ -44,14 +44,14 @@ float Vec3::Dot(const Vec3& v1, const Vec3& v2)
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-float Vec3::LenSq(const Vec3& v)
+float Vec3::LenSq() const
 {
-    return v.x * v.x + v.y * v.y + v.z * v.z; 
+    return x * x + y * y + z * z; 
 }
 
-float Vec3::Len(const Vec3& v)
+float Vec3::Len() const
 {
-    float lenSq = LenSq(v);
+    float lenSq = LenSq();
     if(lenSq < VEC3_EPSILON)
         return 0.0f;
     
@@ -60,25 +60,25 @@ float Vec3::Len(const Vec3& v)
 
 void Vec3::Normalize(Vec3& v)
 {
-    float lenSq = LenSq(v);
+    float lenSq = v.LenSq();
     if(lenSq < VEC3_EPSILON) { return; }
     
     float invLen = 1.0f / sqrtf(lenSq);
     v.x *= invLen; v.y *= invLen; v.z *= invLen;
 }
 
-Vec3 Vec3::Normalized(const Vec3& v)
+Vec3 Vec3::Normalized() const
 {
-    float lenSq = LenSq(v);
-    if(lenSq < VEC3_EPSILON) { return v; }
+    float lenSq = LenSq();
+    if(lenSq < VEC3_EPSILON) { return {x,y,z}; }
     
     float invLen = 1.0f / sqrtf(lenSq);
-    return Vec3(v.x * invLen,v.y * invLen,v.z * invLen);
+    return Vec3(x * invLen,y * invLen,z * invLen);
 }
 
 float Vec3::Angle(const Vec3& v1, const Vec3& v2)
 {
-    return acosf(Dot(v1, v2) / (Len(v1) * Len(v2)));
+    return acosf(Dot(v1, v2) / (v1.Len() * v2.Len()));
 }
 
 float Vec3::AngleDeg(const Vec3& v1, const Vec3& v2)
@@ -88,7 +88,7 @@ float Vec3::AngleDeg(const Vec3& v1, const Vec3& v2)
 
 Vec3 Vec3::Project(const Vec3& a, const Vec3& b)
 {
-    float lenBSq = Len(b);
+    float lenBSq = b.Len();
     if(lenBSq < VEC3_EPSILON) {return Vec3();}
 
     float scale = Dot(a,b) / lenBSq;
@@ -102,7 +102,7 @@ Vec3 Vec3::Reject(const Vec3& a, const Vec3& b)
 
 Vec3 Vec3::Reflect(const Vec3& a, const Vec3& b)
 {
-    float magBSq = Len(b);
+    float magBSq = b.Len();
     if(magBSq < VEC3_EPSILON) { return Vec3(); }
 
     float scale = Dot(a,b) / magBSq;
@@ -132,8 +132,8 @@ Vec3 Vec3::SLerp(const Vec3& v1, const Vec3& v2, float t)
 {
     if(t < 0.01f) { return Lerp(v1,v2,t); }
 
-    Vec3 from = Normalized(v1);
-    Vec3 to = Normalized(v2);
+    Vec3 from = v1.Normalized();
+    Vec3 to = v2.Normalized();
 
     float theta = Angle(from, to);
     float sinTheta = sinf(theta);
@@ -146,5 +146,5 @@ Vec3 Vec3::SLerp(const Vec3& v1, const Vec3& v2, float t)
 
 Vec3 Vec3::NLerp(const Vec3& v1, const Vec3& v2, float t)
 {
-    return Normalized(Lerp(v1, v2, t));
+    return Lerp(v1, v2, t).Normalized();
 }
