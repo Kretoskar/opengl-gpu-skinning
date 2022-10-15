@@ -31,6 +31,11 @@ struct Quat
     static Quat AngleAxis(float angle, const Vec3& axis);
     static Quat FromTo(const Vec3& from, const Vec3& to);
     static bool SameOrientation(const Quat& a, const Quat& b);
+
+    static float Dot(const Quat& a, const Quat& b);
+
+    float LenSq() const;
+    float Len() const;
 };
 
 Quat operator+(const Quat& a, const Quat& b);

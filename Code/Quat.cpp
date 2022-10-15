@@ -67,6 +67,27 @@ bool Quat::SameOrientation(const Quat& a, const Quat& b)
             fabsf(a.w + b.w) <= QUAT_EPSILON);
 }
 
+float Quat::Dot(const Quat& a, const Quat& b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
+float Quat::LenSq() const
+{
+    return x*x + y*y + z*z + w*w;
+}
+
+float Quat::Len() const
+{
+    float lenSq = LenSq();
+    if(lenSq <= QUAT_EPSILON)
+    {
+        return 0.0f;
+    }
+
+    return sqrtf(lenSq);
+}
+
 Quat operator+(const Quat& a, const Quat& b)
 {
     return Quat(a.x+b.x, a.y+b.y, a.z+b.z, a.w+b.w);
