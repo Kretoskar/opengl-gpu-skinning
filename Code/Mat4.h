@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Quat.h"
 #include "TVec4.h"
 #include "Vec3.h"
 
@@ -94,4 +95,6 @@ struct Mat4
     static Mat4 Orthographic (float left, float right, float bottom, float top, float near, float far);
 
     static Mat4 LookAt (const Vec3& position, const Vec3& Target, const Vec3& Up);
+
+    Quat ToQuat();
 };

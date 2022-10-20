@@ -43,11 +43,16 @@ struct Quat
 
     Quat Conjugate();
     Quat Inverse() const;
+    
     //Lerp, assuming that input quaternions are in the desired neighborhood
     Quat Mix(const Quat& from, const Quat& to, float t);
     //Assums that input quaternions are in the desired neighborhood
     Quat Nlerp(const Quat& from, const Quat& to, float t);
     Quat Slerp(const Quat& start, const Quat& end, float t);
+
+    static Quat LookRotation(const Vec3& direction, const Vec3& refUp);
+
+    Mat4 ToMat4() const;
 };
 
 Quat operator+(const Quat& a, const Quat& b);

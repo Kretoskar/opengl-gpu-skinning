@@ -265,3 +265,13 @@ Mat4 Mat4::LookAt(const Vec3& position, const Vec3& target, const Vec3& up)
         t.x,     t.y,     t.z,        1
     );
 }
+
+Quat Mat4::ToQuat()
+{
+    Vec3 up = Vec3(this->up.x, this->up.y, this->up.z).Normalized();
+    Vec3 forward = Vec3(this->forward.x, this->forward.y, this->forward.z).Normalized();
+    Vec3 right = Vec3::Cross(up, forward);
+    up = Vec3::Cross(forward, right);
+
+    return Quat::LookRotation(forward, up);
+}

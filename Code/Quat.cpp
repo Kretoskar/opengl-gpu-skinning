@@ -215,3 +215,33 @@ Quat Quat::Slerp(const Quat& start, const Quat& end, float t)
     Quat delta = start.Inverse() * end;
     return ((delta ^ t) * start);
 }
+
+Quat Quat::LookRotation(const Vec3& direction, const Vec3& refUp)
+{
+    Vec3 forward = direction.Normalized();
+    Vec3 up = refUp.Normalized();
+    Vec3 right = Vec3::Cross(up, forward);
+    up = Vec3::Cross(forward, right);
+
+    Quat worldToObject = FromTo(Vec3(0,0,1), forward);
+    Vec3 objectUp = worldToObject * Vec3(0,1,0);
+    Quat objectUpToDesiredUp = FromTo(objectUp, up);
+
+    Quat result = worldToObject * objectUpToDesiredUp;
+    return result.Normalized();
+}
+
+Mat4 Quat::ToMat4() const
+{
+    Quat thisQuat = Quat(x,y,z,w);
+    Vec3 right = thisQuat * Vec3(1,0,0);
+    Vec3 up = thisQuat * Vec3(0,1,0);
+    Vec3 forward = thisQuat * Vec3(0,0,1);
+
+    return Mat4(
+        right.x, right.y, right.z, 0,
+        up.x, up.y, up.z, 0,
+        forward.x, forward.y, forward.z, 0,
+        0,0,0,1
+        );
+}
