@@ -42,13 +42,21 @@ struct Quat
     float Len() const;
 
     Quat Conjugate();
-    Quat Inverse();
+    Quat Inverse() const;
+    //Lerp, assuming that input quaternions are in the desired neighborhood
+    Quat Mix(const Quat& from, const Quat& to, float t);
+    //Assums that input quaternions are in the desired neighborhood
+    Quat Nlerp(const Quat& from, const Quat& to, float t);
+    Quat Slerp(const Quat& start, const Quat& end, float t);
 };
 
 Quat operator+(const Quat& a, const Quat& b);
 Quat operator-(const Quat& a, const Quat& b);
 Quat operator*(const Quat& a, float b);
 Quat operator-(const Quat& q);
+Quat operator*(const Quat& a, const Quat&b);
+Vec3 operator*(const Quat& q, const Vec3& v);
+Quat operator^(const Quat& q, float f);
 
 bool operator==(const Quat& left, const Quat& right);
 bool operator!=(const Quat& left, const Quat& right);

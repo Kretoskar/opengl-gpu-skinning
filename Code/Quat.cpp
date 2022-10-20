@@ -24,6 +24,34 @@ Quat operator-(const Quat& q)
     return Quat(-q.x, -q.y, -q.z, -q.w);
 }
 
+Quat operator*(const Quat&a, const Quat&b)
+{
+    return Quat(
+        b.x *a.w + b.y*a.z - b.z*a.y + b.w*a.x,
+        -b.x*a.z + b.y*a.w + b.z*a.x + b.w*a.y,
+        b.x*a.y - b.y*a.x + b.z*a.w + b.w*a.z,
+        -b.x*a.x - b.y*a.y - b.z*a.z + b.w*a.w
+    );
+}
+
+Vec3 operator*(const Quat& q, const Vec3& v)
+{
+    return q.vector * 2.0f * Vec3::Dot(q.vector, v) +
+        v * (q.scalar * q.scalar - Vec3::Dot(q.vector, q.vector)) +
+            Vec3::Cross(q.vector, v) * 2.0f * q.scalar;
+}
+
+Quat operator^(const Quat& q, float f)
+{
+    float angle = 2.0f * acosf(q.scalar);
+    Vec3 axis = q.vector.Normalized();
+
+    float halfCos = cos(f * angle * 0.5f);
+    float halfSin = sin(f * angle * 0.5f);
+
+    return Quat(axis.x * halfSin, axis.y * halfSin, axis.z * halfSin, halfCos);
+}
+
 bool operator==(const Quat& left, const Quat& right)
 {
     return (abs(left.x - right.x) <= QUAT_EPSILON &&
@@ -155,7 +183,7 @@ Quat Quat::Conjugate()
     return Quat(-x, -y, -z, w);
 }
 
-Quat Quat::Inverse()
+Quat Quat::Inverse() const
 {
     float lenSq = LenSq();
     if(lenSq < QUAT_EPSILON)
@@ -165,4 +193,25 @@ Quat Quat::Inverse()
 
     float recip = 1.0f / lenSq;
     return Quat(-x * recip, -y * recip, -z * recip, w * recip);
+}
+
+Quat Quat::Mix(const Quat& from, const Quat& to, float t)
+{
+    return from * (1.0f - t) + to * t;
+}
+
+Quat Quat::Nlerp(const Quat& from, const Quat& to, float t)
+{
+    return (from + (to - from) * t).Normalized();
+}
+
+Quat Quat::Slerp(const Quat& start, const Quat& end, float t)
+{
+    if(abs(Dot(start, end)) > 1.0f - QUAT_EPSILON)
+    {
+        return Nlerp(start, end, t);
+    }
+
+    Quat delta = start.Inverse() * end;
+    return ((delta ^ t) * start);
 }
