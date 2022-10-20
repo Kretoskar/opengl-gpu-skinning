@@ -149,3 +149,20 @@ float Quat::Len() const
 
     return sqrt(lenSq);
 }
+
+Quat Quat::Conjugate()
+{
+    return Quat(-x, -y, -z, w);
+}
+
+Quat Quat::Inverse()
+{
+    float lenSq = LenSq();
+    if(lenSq < QUAT_EPSILON)
+    {
+        return Quat();
+    }
+
+    float recip = 1.0f / lenSq;
+    return Quat(-x * recip, -y * recip, -z * recip, w * recip);
+}

@@ -40,6 +40,9 @@ struct Quat
 
     float LenSq() const;
     float Len() const;
+
+    Quat Conjugate();
+    Quat Inverse();
 };
 
 Quat operator+(const Quat& a, const Quat& b);
