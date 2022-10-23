@@ -957,6 +957,10 @@
     <ClInclude Include="Code\Rendering\Texture.h" />
     <ClInclude Include="Code\Rendering\Uniform.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Shaders\lit.frag" />
+    <Content Include="Shaders\static.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
