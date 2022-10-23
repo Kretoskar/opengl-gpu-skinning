@@ -77,12 +77,6 @@ struct Mat4
         zx(zx), zy(zy), zz(zz), zw(zw),
         tx(tx), ty(ty), tz(tz), tw(tw) {}
 
-    Mat4 Transposed() const;
-    float Determinant() const;
-    Mat4 Adjugate() const;
-
-    Mat4 Inverse() const;
-    
     static void Invert(Mat4& m);
 
     static void Transpose(Mat4&m);
@@ -96,8 +90,12 @@ struct Mat4
     static Mat4 Orthographic (float left, float right, float bottom, float top, float near, float far);
 
     static Mat4 LookAt (const Vec3& position, const Vec3& Target, const Vec3& Up);
-
+    
+    Mat4 Transposed() const;
+    float Determinant() const;
+    Mat4 Adjugate() const;
+    Mat4 Inverse() const;
+    
     Quat ToQuat();
-
     Transform ToTransform();
 };

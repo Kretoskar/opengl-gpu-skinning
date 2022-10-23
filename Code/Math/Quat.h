@@ -26,11 +26,6 @@ struct Quat
     Quat() : x(0), y(0), z(0), w(1) {}
     Quat(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
-    Vec3 GetAxis (const Quat& quat);
-    float GetAngle (const Quat& quat);
-
-    Quat Normalized() const;
-    
     static void Normalize(Quat&q);
     static Quat AngleAxis(float angle, const Vec3& axis);
     static Quat FromTo(const Vec3& from, const Vec3& to);
@@ -38,12 +33,6 @@ struct Quat
 
     static float Dot(const Quat& a, const Quat& b);
 
-    float LenSq() const;
-    float Len() const;
-
-    Quat Conjugate();
-    Quat Inverse() const;
-    
     //Lerp, assuming that input quaternions are in the desired neighborhood
     static Quat Mix(const Quat& from, const Quat& to, float t);
     //Assums that input quaternions are in the desired neighborhood
@@ -51,6 +40,17 @@ struct Quat
     static Quat Slerp(const Quat& start, const Quat& end, float t);
 
     static Quat LookRotation(const Vec3& direction, const Vec3& refUp);
+    
+    Vec3 GetAxis (const Quat& quat);
+    float GetAngle (const Quat& quat);
+
+    Quat Normalized() const;
+
+    float LenSq() const;
+    float Len() const;
+
+    Quat Conjugate();
+    Quat Inverse() const;
 
     Mat4 ToMat4() const;
 };

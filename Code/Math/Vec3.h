@@ -17,11 +17,6 @@ struct Vec3
     Vec3() : x(0.0f), y(0.0f), z(0.0f) {}
     Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
     Vec3(float *fv) : x(fv[0]), y(fv[1]), z(fv[2]) {}
-    
-    float LenSq() const;
-    float Len() const;
-    
-    Vec3 Normalized() const;
 
     static void Normalize (Vec3 &v);
     
@@ -40,6 +35,11 @@ struct Vec3
     static Vec3 NLerp(const Vec3 &v1, const Vec3 &v2, float t);
 
     static float Epsilon();
+    
+    float LenSq() const;
+    float Len() const;
+    
+    Vec3 Normalized() const;
 };
 
 Vec3 operator+(const Vec3& v1, const Vec3& v2);

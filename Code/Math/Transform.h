@@ -15,11 +15,10 @@ struct Transform
     Transform() : position({0,0,0}), rotation({0,0,0,1}), scale({1, 1, 1}) {}
 
     static Transform Combine(const Transform& a, const Transform& b);
-    Transform Inverse() const;
     static Transform Mix(const Transform& a, const Transform& b, float t);
-
-    Mat4 ToMat4();
-
     static Vec3 TransformPoint(const Transform& a, const Vec3& b);
     static Vec3 TransformVector(const Transform& a, const Vec3& b);
+    
+    Transform Inverse() const;
+    Mat4 ToMat4();
 };
