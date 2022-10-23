@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Attribute.cpp" />
     <ClCompile Include="Code\Core\glad.c">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -278,6 +279,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Code\Draw.cpp" />
+    <ClCompile Include="Code\IndexBuffer.cpp" />
     <ClCompile Include="Code\Math\Mat4.cpp">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -571,11 +574,15 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Code\Shader.cpp" />
+    <ClCompile Include="Code\Uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Attribute.h" />
     <ClInclude Include="Code\Core\Application.h" />
     <ClInclude Include="Code\Core\glad.h" />
     <ClInclude Include="Code\Core\khrplatform.h" />
+    <ClInclude Include="Code\Draw.h" />
+    <ClInclude Include="Code\IndexBuffer.h" />
     <ClInclude Include="Code\Math\Mat4.h" />
     <ClInclude Include="Code\Math\Quat.h" />
     <ClInclude Include="Code\Math\Transform.h" />
@@ -583,6 +590,7 @@
     <ClInclude Include="Code\Math\TVec4.h" />
     <ClInclude Include="Code\Math\Vec3.h" />
     <ClInclude Include="Code\Shader.h" />
+    <ClInclude Include="Code\Uniform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
