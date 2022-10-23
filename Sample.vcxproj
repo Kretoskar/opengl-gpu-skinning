@@ -570,6 +570,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Code\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Core\Application.h" />
@@ -581,6 +582,7 @@
     <ClInclude Include="Code\Math\TVec2.h" />
     <ClInclude Include="Code\Math\TVec4.h" />
     <ClInclude Include="Code\Math\Vec3.h" />
+    <ClInclude Include="Code\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
