@@ -864,6 +864,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Code\Rendering\stb_image.cpp" />
+    <ClCompile Include="Code\Rendering\Texture.cpp" />
     <ClCompile Include="Code\Rendering\Uniform.cpp">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -953,6 +954,7 @@
     <ClInclude Include="Code\Rendering\IndexBuffer.h" />
     <ClInclude Include="Code\Rendering\Shader.h" />
     <ClInclude Include="Code\Rendering\stb_image.h" />
+    <ClInclude Include="Code\Rendering\Texture.h" />
     <ClInclude Include="Code\Rendering\Uniform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
