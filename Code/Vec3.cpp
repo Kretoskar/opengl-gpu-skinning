@@ -148,3 +148,8 @@ Vec3 Vec3::NLerp(const Vec3& v1, const Vec3& v2, float t)
 {
     return Lerp(v1, v2, t).Normalized();
 }
+
+float Vec3::Epsilon()
+{
+    return VEC3_EPSILON;
+}

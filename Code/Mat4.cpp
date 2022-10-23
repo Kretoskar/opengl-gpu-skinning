@@ -1,6 +1,7 @@
 ﻿#include "Mat4.h"
 #include "Vec3.h"
 #include <corecrt_math.h>
+#include <iomanip>
 #include <iostream>
 
 #define MAT4_EPSILON 0.000001f
@@ -274,4 +275,27 @@ Quat Mat4::ToQuat()
     up = Vec3::Cross(forward, right);
 
     return Quat::LookRotation(forward, up);
+}
+
+Transform Mat4::ToTransform()
+{
+    Transform out;
+
+    out.position = Vec3(v[12], v[13], v[14]);
+    out.rotation = ToQuat();
+    Mat4 rotScaleMat(
+        v[0], v[1], v[2], 0,
+        v[4], v[5], v[6], 0,
+        v[8], v[9], v[10], 0,
+        0, 0, 0, 1);
+
+    Mat4 invRotMat = out.rotation.Inverse().ToMat4();
+    Mat4 scaleSkewMat = rotScaleMat * invRotMat;
+
+    out.scale = Vec3(
+        scaleSkewMat.v[0],
+        scaleSkewMat.v[5],
+        scaleSkewMat.v[10]);
+
+    return out;
 }

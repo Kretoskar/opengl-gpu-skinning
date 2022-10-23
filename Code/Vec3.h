@@ -38,6 +38,8 @@ struct Vec3
     static Vec3 Lerp(const Vec3 &v1, const Vec3 &v2, float t);
     static Vec3 SLerp(const Vec3 &v1, const Vec3 &v2, float t);
     static Vec3 NLerp(const Vec3 &v1, const Vec3 &v2, float t);
+
+    static float Epsilon();
 };
 
 Vec3 operator+(const Vec3& v1, const Vec3& v2);
