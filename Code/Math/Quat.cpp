@@ -6,32 +6,32 @@
 
 Quat operator+(const Quat& a, const Quat& b)
 {
-    return Quat(a.x+b.x, a.y+b.y, a.z+b.z, a.w+b.w);
+    return {a.x+b.x, a.y+b.y, a.z+b.z, a.w+b.w};
 }
 
 Quat operator-(const Quat& a, const Quat& b)
 {
-    return Quat(a.x-b.x, a.y-b.y, a.z-b.z, a.w-b.w);
+    return {a.x-b.x, a.y-b.y, a.z-b.z, a.w-b.w};
 }
 
 Quat operator*(const Quat& a, float b)
 {
-    return Quat(a.x * b, a.y * b, a.z * b, a.w * b);
+    return {a.x * b, a.y * b, a.z * b, a.w * b};
 }
 
 Quat operator-(const Quat& q)
 {
-    return Quat(-q.x, -q.y, -q.z, -q.w);
+    return {-q.x, -q.y, -q.z, -q.w};
 }
 
 Quat operator*(const Quat&a, const Quat&b)
 {
-    return Quat(
+    return {
         b.x *a.w + b.y*a.z - b.z*a.y + b.w*a.x,
         -b.x*a.z + b.y*a.w + b.z*a.x + b.w*a.y,
         b.x*a.y - b.y*a.x + b.z*a.w + b.w*a.z,
         -b.x*a.x - b.y*a.y - b.z*a.z + b.w*a.w
-    );
+    };
 }
 
 Vec3 operator*(const Quat& q, const Vec3& v)
@@ -43,13 +43,13 @@ Vec3 operator*(const Quat& q, const Vec3& v)
 
 Quat operator^(const Quat& q, float f)
 {
-    float angle = 2.0f * acosf(q.scalar);
-    Vec3 axis = q.vector.Normalized();
+    const float angle = 2.0f * acosf(q.scalar);
+    const Vec3 axis = q.vector.Normalized();
 
-    float halfCos = cos(f * angle * 0.5f);
-    float halfSin = sin(f * angle * 0.5f);
+    const float halfCos = cos(f * angle * 0.5f);
+    const float halfSin = sin(f * angle * 0.5f);
 
-    return Quat(axis.x * halfSin, axis.y * halfSin, axis.z * halfSin, halfCos);
+    return {axis.x * halfSin, axis.y * halfSin, axis.z * halfSin, halfCos};
 }
 
 bool operator==(const Quat& left, const Quat& right)
@@ -68,22 +68,22 @@ bool operator!=(const Quat& left, const Quat& right)
 
 Quat Quat::AngleAxis(float angle, const Vec3& axis)
 {
-    Vec3 norm = axis.Normalized();
+    const Vec3 norm = axis.Normalized();
 
-    float halfAngle = angle * 0.5f;
-    float s = sinf(halfAngle);
+    const float halfAngle = angle * 0.5f;
+    const float s = sinf(halfAngle);
 
-    return Quat(norm.x * s, norm.y * s, norm.z * s, cosf(halfAngle));
+    return {norm.x * s, norm.y * s, norm.z * s, cosf(halfAngle)};
 }
 
 Quat Quat::FromTo(const Vec3& from, const Vec3& to)
 {
-    Vec3 fromN = from.Normalized();
-    Vec3 toN = to.Normalized();
+    const Vec3 fromN = from.Normalized();
+    const Vec3 toN = to.Normalized();
 
     if(fromN == toN)
     {
-        return Quat();
+        return {};
     }
     
     // if vectors are orthogonal, return the "flattest" axis
@@ -101,10 +101,10 @@ Quat Quat::FromTo(const Vec3& from, const Vec3& to)
         Vec3 axis = Vec3::Cross(fromN, ortho).Normalized();
         return Quat(axis.x, axis.y, axis.z, 0);
     }
-    
-    Vec3 half = (fromN + toN).Normalized();
+
+    const Vec3 half = (fromN + toN).Normalized();
     Vec3 axis = Vec3::Cross(fromN, half);
-    return Quat(axis.x, axis.y, axis.z, Vec3::Dot(fromN, half));
+    return {axis.x, axis.y, axis.z, Vec3::Dot(fromN, half)};
 }
 
 Vec3 Quat::GetAxis(const Quat& quat)
@@ -132,13 +132,13 @@ Quat Quat::Normalized() const
 
 void Quat::Normalize(Quat& q)
 {
-    float lenSq = q.LenSq();
+    const float lenSq = q.LenSq();
     if(lenSq < QUAT_EPSILON)
     {
         return;
     }
 
-    float invLen = 1/sqrt(lenSq);
+    const float invLen = 1/sqrt(lenSq);
     q.x *= invLen;
     q.y *= invLen;
     q.z *= invLen;
@@ -169,7 +169,7 @@ float Quat::LenSq() const
 
 float Quat::Len() const
 {
-    float lenSq = LenSq();
+    const float lenSq = LenSq();
     if(lenSq <= QUAT_EPSILON)
     {
         return 0.0f;
@@ -180,19 +180,19 @@ float Quat::Len() const
 
 Quat Quat::Conjugate()
 {
-    return Quat(-x, -y, -z, w);
+    return {-x, -y, -z, w};
 }
 
 Quat Quat::Inverse() const
 {
-    float lenSq = LenSq();
+    const float lenSq = LenSq();
     if(lenSq < QUAT_EPSILON)
     {
-        return Quat();
+        return {};
     }
 
-    float recip = 1.0f / lenSq;
-    return Quat(-x * recip, -y * recip, -z * recip, w * recip);
+    const float recip = 1.0f / lenSq;
+    return {-x * recip, -y * recip, -z * recip, w * recip};
 }
 
 Quat Quat::Mix(const Quat& from, const Quat& to, float t)
@@ -218,30 +218,30 @@ Quat Quat::Slerp(const Quat& start, const Quat& end, float t)
 
 Quat Quat::LookRotation(const Vec3& direction, const Vec3& refUp)
 {
-    Vec3 forward = direction.Normalized();
+    const Vec3 forward = direction.Normalized();
     Vec3 up = refUp.Normalized();
-    Vec3 right = Vec3::Cross(up, forward);
+    const Vec3 right = Vec3::Cross(up, forward);
     up = Vec3::Cross(forward, right);
 
-    Quat worldToObject = FromTo(Vec3(0,0,1), forward);
-    Vec3 objectUp = worldToObject * Vec3(0,1,0);
-    Quat objectUpToDesiredUp = FromTo(objectUp, up);
+    const Quat worldToObject = FromTo(Vec3(0,0,1), forward);
+    const Vec3 objectUp = worldToObject * Vec3(0,1,0);
+    const Quat objectUpToDesiredUp = FromTo(objectUp, up);
 
-    Quat result = worldToObject * objectUpToDesiredUp;
+    const Quat result = worldToObject * objectUpToDesiredUp;
     return result.Normalized();
 }
 
 Mat4 Quat::ToMat4() const
 {
-    Quat thisQuat = Quat(x,y,z,w);
-    Vec3 right = thisQuat * Vec3(1,0,0);
-    Vec3 up = thisQuat * Vec3(0,1,0);
-    Vec3 forward = thisQuat * Vec3(0,0,1);
+    const Quat thisQuat = Quat(x,y,z,w);
+    const Vec3 right = thisQuat * Vec3(1,0,0);
+    const Vec3 up = thisQuat * Vec3(0,1,0);
+    const Vec3 forward = thisQuat * Vec3(0,0,1);
 
-    return Mat4(
+    return {
         right.x, right.y, right.z, 0,
         up.x, up.y, up.z, 0,
         forward.x, forward.y, forward.z, 0,
         0,0,0,1
-        );
+    };
 }

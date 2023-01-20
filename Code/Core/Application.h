@@ -3,16 +3,16 @@
 
 class Application {
 private:
-	Application(const Application&);
-	Application& operator=(const Application&);
+	Application(const Application&) = delete;
+	Application& operator=(const Application&) = delete;
 public:
-	inline Application() { }
-	inline virtual ~Application() { }
+	Application() = default;
+	virtual ~Application() = default;
 
-	inline virtual void Initialize() { }
-	inline virtual void Update(float inDeltaTime) { }
-	inline virtual void Render(float inAspectRatio) { }
-	inline virtual void Shutdown() { }
+	virtual void Initialize() { }
+	virtual void Update(float inDeltaTime) { }
+	virtual void Render(float inAspectRatio) { }
+	virtual void Shutdown() { }
 };
 
 #endif

@@ -25,7 +25,7 @@ Transform Transform::Inverse() const
     inv.scale.y = abs(scale.x) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.y;
     inv.scale.z = abs(scale.x) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.z;
 
-    Vec3 invTrans = position * -1.0f;
+    const Vec3 invTrans = position * -1.0f;
     inv.position = inv.rotation * (inv.scale * invTrans);
 
     return inv;
