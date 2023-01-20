@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Core\cgltf.c" />
     <ClCompile Include="Code\Core\glad.c">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -206,6 +207,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Code\Core\GLTFLoader.cpp" />
     <ClCompile Include="Code\Core\WinMain.cpp">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -941,7 +943,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Core\Application.h" />
+    <ClInclude Include="Code\Core\cgltf.h" />
     <ClInclude Include="Code\Core\glad.h" />
+    <ClInclude Include="Code\Core\GLTFLoader.h" />
     <ClInclude Include="Code\Core\khrplatform.h" />
     <ClInclude Include="Code\Math\Mat4.h" />
     <ClInclude Include="Code\Math\Quat.h" />
