@@ -1,8 +1,7 @@
 ﻿#include "Bezier.h"
 
-
 template <typename T>
-T Bezier<T>::Interpolate(float t)
+T Bezier<T>::Evaluate(float t)
 {
     // readable version
     /*
@@ -21,13 +20,4 @@ T Bezier<T>::Interpolate(float t)
             C1 * (3.0f * ((1 - t) * (1 - t)) * t) +
             C2 * (3.0f * (1 - t) * (t * t)) +
             P2 * (t * t * t);
-}
-
-template <typename T>
-void Bezier<T>::Draw(Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4)
-{
-    Vec3 red = Vec3(1, 0, 0);
-    Vec3 green = Vec3(0, 1, 0);
-    Vec3 blue = Vec3(0, 0, 1);
-    Vec3 magenta = Vec3(1, 0, 1);
 }

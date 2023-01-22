@@ -437,6 +437,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Code\Math\Splines\Bezier.cpp" />
+    <ClCompile Include="Code\Math\Splines\CubicHermite.cpp" />
     <ClCompile Include="Code\Math\Transform.cpp">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -952,6 +953,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Animation\Frame.h" />
+    <ClInclude Include="Code\Animation\Interpolation.h" />
     <ClInclude Include="Code\Core\Application.h" />
     <ClInclude Include="Code\Core\cgltf.h" />
     <ClInclude Include="Code\Core\glad.h" />
@@ -960,6 +963,7 @@
     <ClInclude Include="Code\Math\Mat4.h" />
     <ClInclude Include="Code\Math\Quat.h" />
     <ClInclude Include="Code\Math\Splines\Bezier.h" />
+    <ClInclude Include="Code\Math\Splines\CubicHermite.h" />
     <ClInclude Include="Code\Math\Transform.h" />
     <ClInclude Include="Code\Math\TVec2.h" />
     <ClInclude Include="Code\Math\TVec4.h" />

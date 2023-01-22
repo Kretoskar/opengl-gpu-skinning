@@ -1,14 +1,13 @@
 ﻿#pragma once
-#include "Math/Vec3.h"
 
 template<typename T>
-class Bezier
+class CubicHermite
 {
 public:
     T P1; // Point 1
-    T C1; // Control 1
+    T S1; // Slope 1
     T P2; // Point 2
-    T C2; // Control 2
+    T S2; // Slope 2
 
     T Evaluate(float t);
 };
