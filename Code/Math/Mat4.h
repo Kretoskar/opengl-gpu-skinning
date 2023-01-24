@@ -127,7 +127,7 @@ inline Mat4 operator * (const Mat4& m, float f)
 
 inline bool operator == (const Mat4& m1, const Mat4& m2)
 {
-    for(int i = 0; i < 16; i++)
+    for(int i = 0; i < 16; ++i)
     {
         if(fabsf(m1.v[i] - m2.v[i]) > MAT4_EPSILON)
         {
@@ -147,7 +147,7 @@ inline Mat4 operator * (float f, const Mat4& m)
 {
     return Mat4 (
         m.xx*f,     m.xy*f,     m.xz*f,     m.xw*f,
-        m.yx*f,     m.yy*f,     m.xz*f,     m.yw*f,
+        m.yx*f,     m.yy*f,     m.yz*f,     m.yw*f,
         m.zx*f,     m.zy*f,     m.zz*f,     m.zw*f,
         m.tx*f,     m.ty*f,     m.tz*f,     m.tw*f
     );

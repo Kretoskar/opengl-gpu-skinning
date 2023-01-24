@@ -24,14 +24,13 @@ Quat operator-(const Quat& q)
     return {-q.x, -q.y, -q.z, -q.w};
 }
 
-Quat operator*(const Quat&a, const Quat&b)
-{
-    return {
-        b.x *a.w + b.y*a.z - b.z*a.y + b.w*a.x,
-        -b.x*a.z + b.y*a.w + b.z*a.x + b.w*a.y,
-        b.x*a.y - b.y*a.x + b.z*a.w + b.w*a.z,
-        -b.x*a.x - b.y*a.y - b.z*a.z + b.w*a.w
-    };
+Quat operator*(const Quat& Q1, const Quat& Q2) {
+    return Quat(
+        Q2.x * Q1.w + Q2.y * Q1.z - Q2.z * Q1.y + Q2.w * Q1.x,
+        -Q2.x * Q1.z + Q2.y * Q1.w + Q2.z * Q1.x + Q2.w * Q1.y,
+        Q2.x * Q1.y - Q2.y * Q1.x + Q2.z * Q1.w + Q2.w * Q1.z,
+        -Q2.x * Q1.x - Q2.y * Q1.y - Q2.z * Q1.z + Q2.w * Q1.w
+    );
 }
 
 Vec3 operator*(const Quat& q, const Vec3& v)

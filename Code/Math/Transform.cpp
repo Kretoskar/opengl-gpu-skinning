@@ -22,8 +22,8 @@ Transform Transform::Inverse() const
 
     inv.rotation = rotation.Inverse();
     inv.scale.x = abs(scale.x) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.x;
-    inv.scale.y = abs(scale.x) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.y;
-    inv.scale.z = abs(scale.x) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.z;
+    inv.scale.y = abs(scale.y) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.y;
+    inv.scale.z = abs(scale.z) < Vec3::Epsilon() ? 0.0f : 1.0f / scale.z;
 
     const Vec3 invTrans = position * -1.0f;
     inv.position = inv.rotation * (inv.scale * invTrans);
@@ -58,7 +58,7 @@ Mat4 Transform::ToMat4()
     Vec3 p = position;
     return Mat4(
         x.x, x.y, x.z, 0,
-        y.x, y.y, z.z, 0,
+        y.x, y.y, y.z, 0,
         z.x, z.y, z.z, 0,
         p.x, p.y, p.z, 1
     );
