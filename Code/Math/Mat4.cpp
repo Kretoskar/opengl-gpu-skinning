@@ -129,9 +129,9 @@ Mat4 Mat4::Frustum(float left, float right, float bottom, float top, float near,
     }
 
     return {
-        (2.0f * near) / (right - 1), 0, 0, 0,
+        (2.0f * near) / (right - left), 0, 0, 0,
         0, (2.0f * near) / (top - bottom), 0, 0,
-        (right + 1) / (right - 1), (top + bottom) / (top - bottom), (-(far + near)) / (far - near), -1,
+        (right + left) / (right - left), (top + bottom) / (top - bottom), (-(far + near)) / (far - near), -1,
         0, 0, (-2 * far * near) / (far - near), 0
     };
 }
@@ -153,10 +153,10 @@ Mat4 Mat4::Orthographic(float left, float right, float bottom, float top, float 
     }
 
     return {
-        2.0f / (right - 1), 0, 0, 0,
+        2.0f / (right - left), 0, 0, 0,
         0, 2.0f / (top - bottom), 0, 0,
         0, 0, -2.0f / (far - near), 0,
-        -((right + 1)/(right - 1)), -((top+bottom)/(top-bottom)), -((far+near) / (far - near)), 1
+        -((right + left)/(right - left)), -((top+bottom)/(top-bottom)), -((far+near) / (far - near)), 1
     }; 
 }
 
@@ -182,8 +182,8 @@ Mat4 Mat4::LookAt(const Vec3& position, const Vec3& target, const Vec3& up)
 
     return {
         right.x, newUp.x, forward.x, 0,
-        right.y, up.y,    forward.y, 0,
-        right.z, up.z,    forward.z, 0,
+        right.y, newUp.y,    forward.y, 0,
+        right.z, newUp.z,    forward.z, 0,
         t.x,     t.y,     t.z,        1
     };
 }

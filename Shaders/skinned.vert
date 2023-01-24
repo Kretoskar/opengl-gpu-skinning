@@ -1,4 +1,4 @@
-﻿#version 330 core
+#version 330 core
 
 uniform mat4 model;
 uniform mat4 view;
@@ -24,7 +24,7 @@ void main() {
     skin += (pose[joints.w] * invBindPose[joints.w]) * weights.w;
 
     gl_Position = projection * view * model * skin * vec4(position, 1.0);
-
+    
     fragPos = vec3(model * skin * vec4(position, 1.0));
     norm = vec3(model * skin * vec4(normal, 0.0f));
     uv = texCoord;
