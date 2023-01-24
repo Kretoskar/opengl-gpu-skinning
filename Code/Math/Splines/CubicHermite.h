@@ -10,4 +10,5 @@ public:
     T S2; // Slope 2
 
     T Evaluate(float t);
+    static T Evaluate(T p1, T s1, T p2, T s2, float t);
 };

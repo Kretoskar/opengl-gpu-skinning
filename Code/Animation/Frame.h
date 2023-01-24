@@ -1,9 +1,7 @@
 ﻿#pragma once
 
 template<unsigned int N>
-class Frame
-{
-public:
+struct Frame {
     float mValue[N];
     float mIn[N];
     float mOut[N];

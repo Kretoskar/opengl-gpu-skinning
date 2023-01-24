@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Math/Vec3.h"
 
 template<typename T>
 class Bezier
@@ -11,4 +10,5 @@ public:
     T C2; // Control 2
 
     T Evaluate(float t);
+    static T Evaluate(T p1, T c1, T p2, T c2, float t);
 };

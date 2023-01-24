@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Animation\Track.cpp" />
     <ClCompile Include="Code\Core\cgltf.c" />
     <ClCompile Include="Code\Core\glad.c">
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -955,6 +956,7 @@
   <ItemGroup>
     <ClInclude Include="Code\Animation\Frame.h" />
     <ClInclude Include="Code\Animation\Interpolation.h" />
+    <ClInclude Include="Code\Animation\Track.h" />
     <ClInclude Include="Code\Core\Application.h" />
     <ClInclude Include="Code\Core\cgltf.h" />
     <ClInclude Include="Code\Core\glad.h" />
