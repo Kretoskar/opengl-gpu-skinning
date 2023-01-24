@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Animation/Clip.h"
+#include "Animation/Mesh.h"
 #include "Animation/Pose.h"
 #include "Animation/Track.h"
 #include "Animation/TransformTrack.h"
@@ -127,6 +128,107 @@ namespace GLTFHelpers
             {
                 frame.mOut[comp] = isSamplerCubic ? 
                       val[baseIndex + offset++] : 0.0f;
+            }
+        }
+    }
+
+    void MeshFromAttribute(Mesh& outMesh, cgltf_attribute& attribute, cgltf_skin* skin, cgltf_node* nodes, unsigned int nodeCount)
+    {
+        const cgltf_attribute_type attribType = attribute.type;
+        const cgltf_accessor& accessor = *attribute.data;
+        unsigned int componentCount = 0;
+
+        if (accessor.type == cgltf_type_vec2)
+        {
+            componentCount = 2;
+        }
+        
+        else if (accessor.type == cgltf_type_vec3)
+        {
+            componentCount = 3;
+        }
+        
+        else if (accessor.type == cgltf_type_vec4)
+        {
+            componentCount = 4;
+        }
+        
+        std::vector<float> values;
+        GetScalarValues(values, componentCount, accessor);
+        unsigned int acessorCount = accessor.count;
+
+        std::vector<Vec3>& positions = outMesh.GetPosition();
+        std::vector<Vec3>& normals = outMesh.GetNormal();
+        std::vector<Vec2>& texCoords = outMesh.GetTexCoord();
+        std::vector<IVec4>& influences = outMesh.GetInfluences();
+        std::vector<Vec4>& weights = outMesh.GetWeights();
+
+        for (unsigned int i = 0; i < acessorCount; ++i)
+        {
+            const int index = i * componentCount;
+            switch (attribType)
+            {
+                case cgltf_attribute_type_position:
+                    positions.push_back(Vec3(values[index + 0], 
+                                            values[index + 1],
+                                            values[index + 2]));
+                    break;
+
+                case cgltf_attribute_type_texcoord:
+                    texCoords.push_back(Vec2(values[index + 0], 
+                                            values[index + 1]));
+                    break;
+
+                case cgltf_attribute_type_weights:
+                    weights.push_back(Vec4(values[index + 0], 
+                                           values[index + 1], 
+                                           values[index + 2], 
+                                           values[index + 3]));
+                    break;
+
+                case cgltf_attribute_type_normal:
+                {
+                    Vec3 normal = Vec3(values[index + 0], 
+                                       values[index + 1], 
+                                       values[index + 2]);
+                    if (normal.LenSq() < 0.000001f) {
+                        normal = Vec3(0, 1, 0);
+                    }
+                    normals.push_back(normal.Normalized());
+                }
+                break;
+                
+                case cgltf_attribute_type_joints:
+                {
+                    // These indices are skin relative.  This 
+                    // function has no information about the
+                    // skin that is being parsed. Add +0.5f to 
+                    // round, since we can't read integers
+                    IVec4 joints(
+                        (int)(values[index + 0] + 0.5f),
+                        (int)(values[index + 1] + 0.5f),
+                        (int)(values[index + 2] + 0.5f),
+                        (int)(values[index + 3] + 0.5f)
+                    );
+                    joints.x = GetNodeIndex(
+                           skin->joints[joints.x], 
+                           nodes, nodeCount);
+                    joints.y = GetNodeIndex(
+                               skin->joints[joints.y], 
+                               nodes, nodeCount);
+                    joints.z = GetNodeIndex(
+                               skin->joints[joints.z], 
+                               nodes, nodeCount);
+                    joints.w = GetNodeIndex(
+                               skin->joints[joints.w], 
+                               nodes, nodeCount);
+                    joints.x = std::max(0, joints.x);
+                    joints.y = std::max(0, joints.y);
+                    joints.z = std::max(0, joints.z);
+                    joints.w = std::max(0, joints.w);
+                    influences.push_back(joints);
+                }
+                break;
             }
         }
     }
@@ -257,4 +359,115 @@ std::vector<Clip> LoadAnimationClips(cgltf_data* data)
         result[i].RecalculateDuration();
     }
     return result;
-} 
+}
+
+Pose LoadBindPose(cgltf_data* data)
+{
+    Pose restPose = LoadRestPose(data);
+    unsigned int numBones = restPose.Size();
+    std::vector<Transform> worldBindPose(numBones);
+
+    for (unsigned int i = 0; i < numBones; ++i)
+    {
+        worldBindPose[i] = restPose.GetGlobalTransform(i);
+    }
+
+    unsigned int numSkins = data->skins_count;
+
+    for (unsigned int i = 0; i < numSkins; ++i)
+    {
+        cgltf_skin* skin = &(data->skins[i]);
+        std::vector<float> invBindAccessor;
+        GLTFHelpers::GetScalarValues(invBindAccessor, 16, *skin->inverse_bind_matrices);
+        unsigned int numJoints = skin->joints_count;
+
+        for (unsigned int j = 0; j < numJoints; ++j)
+        { 
+            // Read the ivnerse bind matrix of the joint
+            float* matrix = &(invBindAccessor[j * 16]);
+            Mat4 invBindMatrix = Mat4(matrix);
+
+            // invert, convert to transform
+            Mat4 bindMatrix = invBindMatrix.Inverse();
+            Transform bindTransform = bindMatrix.ToTransform();
+
+            // Set that transform in the worldBindPose.
+            cgltf_node* jointNode = skin->joints[j];
+            int jointIndex = GLTFHelpers::GetNodeIndex(jointNode, data->nodes, numBones);
+            worldBindPose[jointIndex] = bindTransform;
+        } 
+    }
+
+    //Convert the world bind pose to a regular bind pose
+    Pose bindPose = restPose;
+    for (unsigned int i = 0; i < numBones; ++i)
+    {
+        Transform current = worldBindPose[i];
+        int p = bindPose.GetParent(i);
+
+        if (p >= 0)
+        { // Bring into parent space
+            Transform parent = worldBindPose[p];
+            current = Transform::Combine(parent.Inverse(), current);
+        }
+        
+        bindPose.SetLocalTransform(i, current);
+    }
+    return bindPose;
+}
+
+Skeleton LoadSkeleton(cgltf_data* data)
+{
+    return Skeleton(
+        LoadRestPose(data),
+        LoadBindPose(data),
+        LoadJointNames(data)
+    );
+}
+
+std::vector<Mesh> LoadMeshes(cgltf_data* data)
+{
+    std::vector<Mesh> result;
+    cgltf_node* nodes = data->nodes;
+    unsigned int nodeCount = data->nodes_count;
+    
+    for (unsigned int i = 0; i < nodeCount; ++i)
+    {
+        cgltf_node* node = &nodes[i];
+        if (node->mesh == nullptr || node->skin == nullptr)
+        {
+            continue;
+        }
+        
+        int numPrims = node->mesh->primitives_count;
+        for (int j = 0; j < numPrims; ++j)
+        {
+            result.push_back(Mesh());
+            Mesh& mesh = result[result.size() - 1];
+            
+            cgltf_primitive* primitive = &node->mesh->primitives[j];
+            unsigned int ac=primitive->attributes_count;
+            
+            for (unsigned int k = 0; k < ac; ++k)
+            {
+                cgltf_attribute* attribute = &primitive->attributes[k];
+                GLTFHelpers::MeshFromAttribute(mesh,
+                           *attribute, node->skin, 
+                           nodes, nodeCount);
+            }
+            if (primitive->indices != 0)
+            {
+                int ic = primitive->indices->count;
+                std::vector<unsigned int>& indices = 
+                                   mesh.GetIndices();
+                indices.resize(ic);
+                for (unsigned int k = 0; k < ic; ++k) {
+                    indices[k]=cgltf_accessor_read_index(
+                               primitive->indices, k);
+                }
+            }
+            mesh.UpdateOpenGLBuffers();
+        }
+    }
+    return result;
+}

@@ -1,10 +1,12 @@
 #ifndef _H_APPLICATION_
 #define _H_APPLICATION_
 
-class Application {
+class Application
+{
 private:
 	Application(const Application&) = delete;
 	Application& operator=(const Application&) = delete;
+
 public:
 	Application() = default;
 	virtual ~Application() = default;

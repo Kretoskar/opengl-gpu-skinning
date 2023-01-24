@@ -4,7 +4,7 @@ in vec3 norm;
 in vec3 fragPos;
 in vec2 uv;
 
-uniform vec3 light;  
+uniform vec3 light;
 uniform sampler2D tex0;
 
 out vec4 FragColor;

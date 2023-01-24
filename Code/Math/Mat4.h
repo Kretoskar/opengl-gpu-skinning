@@ -1,10 +1,15 @@
 ﻿#pragma once
+
+#include <corecrt_math.h>
+
 #include "Quat.h"
 #include "Transform.h"
 #include "TVec4.h"
 #include "Vec3.h"
 
 struct Vec3;
+
+#define MAT4_EPSILON 0.000001f
 
 /**
  * 4x4, column-major matrix with column storage
@@ -99,3 +104,83 @@ struct Mat4
     Quat ToQuat();
     Transform ToTransform();
 };
+
+inline Mat4 operator + (const Mat4& m1, const Mat4& m2)
+{
+    return {
+        m1.xx+m2.xx,    m1.xy+m2.xy,    m1.xz+m2.xz,    m1.xw+m2.xw,
+        m1.yx+m2.yx,    m1.yy+m2.yy,    m1.yz+m2.yz,    m1.yw+m2.yw,
+        m1.zx+m2.zx,    m1.zy+m2.zy,    m1.zz+m2.zz,    m1.zw+m2.zw,
+        m1.tx+m2.tx,    m1.ty+m2.ty,     m1.tz+m2.tz,    m1.tw+m2.tw
+    };
+}
+
+inline Mat4 operator * (const Mat4& m, float f)
+{
+    return {
+        m.xx*f,     m.xy*f,     m.xz*f,     m.xw*f,
+        m.yx*f,     m.yy*f,     m.xz*f,     m.yw*f,
+        m.zx*f,     m.zy*f,     m.zz*f,     m.zw*f,
+        m.tx*f,     m.ty*f,     m.tz*f,     m.tw*f
+    };
+}
+
+inline bool operator == (const Mat4& m1, const Mat4& m2)
+{
+    for(int i = 0; i < 16; i++)
+    {
+        if(fabsf(m1.v[i] - m2.v[i]) > MAT4_EPSILON)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+inline bool operator != (const Mat4& m1, const Mat4& m2)
+{
+    return !(m1 == m2);
+}
+
+inline Mat4 operator * (float f, const Mat4& m)
+{
+    return Mat4 (
+        m.xx*f,     m.xy*f,     m.xz*f,     m.xw*f,
+        m.yx*f,     m.yy*f,     m.xz*f,     m.yw*f,
+        m.zx*f,     m.zy*f,     m.zz*f,     m.zw*f,
+        m.tx*f,     m.ty*f,     m.tz*f,     m.tw*f
+    );
+}
+
+#define M4D(m1Row, m2Col)   (\
+    m1.v[0 * 4 + (m1Row)] * m2.v[(m2Col) * 4 + 0] + \
+    m1.v[1 * 4 + (m1Row)] * m2.v[(m2Col) * 4 + 1] + \
+    m1.v[2 * 4 + (m1Row)] * m2.v[(m2Col) * 4 + 2] + \
+    m1.v[3 * 4 + (m1Row)] * m2.v[(m2Col) * 4 + 3])
+
+#define M4V4D(mRow, x, y, z, w) \
+    ((x)  * m.v[0 * 4 + (mRow)] + \
+    (y) * m.v[1 * 4 + (mRow)] + \
+    (z) * m.v[2 * 4 + (mRow)] + \
+    (w) * m.v[3 * 4 + (mRow)])
+
+inline Vec4 operator * (const Mat4& m, const Vec4& v)
+{
+    return {
+        M4V4D(0, v.x, v.y, v.z, v.w),
+        M4V4D(1, v.x, v.y, v.z, v.w),
+        M4V4D(2, v.x, v.y, v.z, v.w),
+        M4V4D(3, v.x, v.y, v.z, v.w)
+    };
+}
+
+inline Mat4 operator * (const Mat4& m1, const Mat4& m2)
+{
+    return {
+        M4D(0,0),   M4D(1,0),   M4D(2,0),   M4D(3,0),
+        M4D(0,1),   M4D(1,1),   M4D(2,1),   M4D(3,1),
+        M4D(0,2),   M4D(1,2),   M4D(2,2),   M4D(3,2),
+        M4D(0,3),   M4D(1,3),   M4D(2,3),   M4D(3,3)
+    };
+}
