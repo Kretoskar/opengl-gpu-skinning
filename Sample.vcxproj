@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Code\Animation\Clip.cpp" />
+    <ClCompile Include="Code\Animation\Pose.cpp" />
     <ClCompile Include="Code\Animation\Track.cpp" />
     <ClCompile Include="Code\Animation\TransformTrack.cpp" />
     <ClCompile Include="Code\Core\cgltf.c" />
@@ -955,8 +957,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Code\Animation\Clip.h" />
     <ClInclude Include="Code\Animation\Frame.h" />
     <ClInclude Include="Code\Animation\Interpolation.h" />
+    <ClInclude Include="Code\Animation\Pose.h" />
     <ClInclude Include="Code\Animation\Track.h" />
     <ClInclude Include="Code\Animation\TransformTrack.h" />
     <ClInclude Include="Code\Core\Application.h" />
